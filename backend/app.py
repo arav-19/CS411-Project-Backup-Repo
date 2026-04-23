@@ -473,8 +473,9 @@ def delete_workout(wid):
 @app.route('/api/health')
 def health(): return jsonify({'status': 'ok', 'app': 'Fit2BU'})
 
+init_db()
+
 if __name__ == '__main__':
-    init_db()
     print("\n🏋️  Fit2BU backend running on http://localhost:3001")
     print("   Seed accounts: testuser@bu.edu / Password1!")
     print("                  organizer@bu.edu / Password1!\n")
