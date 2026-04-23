@@ -284,17 +284,15 @@ def my_sessions():
     user, err, code = require_auth()
     if err: return err, code
     uid = user['id']
-    # Sessions the user joined (roster)
+
     joined = rows_to_list(query(
-        "SELECT s.*, u.display_name as organizer_name FROM sessions s JOIN users u ON s.organizer_id=u.id JOIN roster_entries r ON r.session_id=s.id WHERE r.user_id=? AND r.status='enrolled' ORDER BY s.start_time",
+        "SELECT s.*, u.display_name as organizer_name FROM sessions s JOIN users u ON s.organizer_id=u.id JOIN roster_entries r ON r.session_id=s.id WHERE r.user_id=? ORDER BY s.start_time",
         (uid,)
     ))
-    # Sessions the user organised
     organised = rows_to_list(query(
         "SELECT s.*, u.display_name as organizer_name FROM sessions s JOIN users u ON s.organizer_id=u.id WHERE s.organizer_id=? ORDER BY s.start_time",
         (uid,)
     ))
-    # Waitlist entries
     waitlisted = rows_to_list(query(
         "SELECT s.*, u.display_name as organizer_name, w.position as waitlist_position FROM sessions s JOIN users u ON s.organizer_id=u.id JOIN waitlist_entries w ON w.session_id=s.id WHERE w.user_id=? ORDER BY s.start_time",
         (uid,)
@@ -480,4 +478,4 @@ if __name__ == '__main__':
     print("\n🏋️  Fit2BU backend running on http://localhost:3001")
     print("   Seed accounts: testuser@bu.edu / Password1!")
     print("                  organizer@bu.edu / Password1!\n")
-    app.run(port=3001, debug=False)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 3001)), debug=False)
